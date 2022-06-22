@@ -1,57 +1,49 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+import React from "react";
+import "./App.css";
+import { Routes, Route } from "react-router-dom";
+// import Login from "./routes/login/login.component";
+import LandingPage from "./routes/landing-page/landing-page.component";
+import Navigation from "./routes/navigation/navigation.component";
+import Home from "./routes/home/home.component";
+import { checkUserDetails } from "./utils/firebase/firebase.utils";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { signInSuccess } from "./store/user/user.slice";
+import { useNavigate } from "react-router-dom";
+// import { addCollectionAndDocuments } from "./utils/firebase/firebase.utils";
+// import data from "./movie-data.json"
+import Details from "./routes/details/detail.component";
 
 function App() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const userAuth = await checkUserDetails();
+        if (!userAuth) return;
+        dispatch(signInSuccess(userAuth));
+        navigate("/home");
+      } catch (err) {
+        alert(err);
+      }
+    })();
+
+    // (()=>{
+    //   console.log(data);
+    //   addCollectionAndDocuments("movies",data);
+    // })();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
-    </div>
+    <Routes>
+      <Route exact path="/" element={<Navigation />}>
+        <Route index element={<LandingPage />} />
+        <Route path="home" element={<Home />} />
+        <Route path="detail/:id" element={<Details />} />
+      </Route>
+    </Routes>
   );
 }
 
