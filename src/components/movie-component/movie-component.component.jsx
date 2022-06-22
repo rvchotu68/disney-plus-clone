@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const MovieComponent = (props) => {
   const { movies, text } = props;
-    console.log(props)
+//   console.log(props);
   return (
     <MovieContainer>
       <h3>{text}</h3>
@@ -11,8 +11,8 @@ const MovieComponent = (props) => {
         {movies.map((movie) => {
           const { cardImg, title, id } = movie;
           return (
-            <Wrap id={id}>
-              <Link to="/">
+            <Wrap key={id}>
+              <Link to={"/detail/" + id}>
                 <img src={cardImg} alt={title} />
               </Link>
             </Wrap>

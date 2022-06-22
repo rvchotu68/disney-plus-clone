@@ -9,12 +9,12 @@ import { checkUserDetails } from "./utils/firebase/firebase.utils";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { signInSuccess } from "./store/user/user.slice";
-import {useNavigate} from "react-router-dom";
-import { addCollectionAndDocuments } from "./utils/firebase/firebase.utils";
-import data from "./movie-data.json"
+import { useNavigate } from "react-router-dom";
+// import { addCollectionAndDocuments } from "./utils/firebase/firebase.utils";
+// import data from "./movie-data.json"
+import Details from "./routes/details/detail.component";
 
 function App() {
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -22,14 +22,13 @@ function App() {
     (async () => {
       try {
         const userAuth = await checkUserDetails();
-       if(!userAuth) return;
+        if (!userAuth) return;
         dispatch(signInSuccess(userAuth));
         navigate("/home");
       } catch (err) {
         alert(err);
       }
     })();
-
 
     // (()=>{
     //   console.log(data);
@@ -42,6 +41,7 @@ function App() {
       <Route exact path="/" element={<Navigation />}>
         <Route index element={<LandingPage />} />
         <Route path="home" element={<Home />} />
+        <Route path="detail/:id" element={<Details />} />
       </Route>
     </Routes>
   );
